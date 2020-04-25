@@ -1,8 +1,9 @@
 from itertools import product
-from insight_helper.py import EnumerateInsight
+# from insight_helper.py import EnumerateInsight
 
 aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
-normal_dims = ["aid", "vid", "year", "type", "coauthor"]
+# normal_dims = ["aid", "vid", "type", "year", "coauthor"]
+normal_dims = [0, 1, 2, 3, 4]
 q4_dims = []
 ce_index = [0, 1, 2, 3, 4, 5, 6, 7]
 ###############   rank    %    davg  dprev  avg   min   max     sum
@@ -15,39 +16,13 @@ compatible_ce = [[True, False, True, True, False, False, False, False],    # ran
                  [False, False, True, True, True, False, False, False],    # max
                  [True, False, True, True, False, True, True, False]]      # sum
 
-def extractors(index, data):
-    if index == 0:
-        # rank
-        pass
-    elif index == 1:
-        # percent
-        pass
-    elif index == 2:
-        # delta_avg
-        pass
-    elif index == 3:
-        # delta_prev
-        pass
-    elif index == 4:
-        # avg
-        pass
-    elif index == 5:
-        # min
-        pass
-    elif index == 6:
-        # max
-        pass
-    elif index == 7:
-        # sum
-        pass
-
 
 def get_all_ces(tau, dims):
     if tau == 1:
         return ["COUNT"]
     elif tau > 1:
         this_round = list(product(ce_index, dims))
-        round_before = get_all_ces(tau-1)
+        round_before = get_all_ces(tau-1, dims)
         return list(product(round_before, this_round))
 
 
@@ -99,5 +74,8 @@ def insights(R, tau, k):
     for ce in O:
         for i in range(d):
             S = ['*', '*', '*', '*', '*']
-            EnumerateInsight(S, i, ce, H)
+            # EnumerateInsight(S, i, ce, H, R, k)
     return H
+
+
+print(get_all_ces(2, normal_dims))
