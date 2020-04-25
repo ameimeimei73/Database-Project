@@ -73,24 +73,24 @@ def sig_point(result_set):
 
 
 
-    x = np.linspace(-5,5,100)
-    # Generate the pdf (fitted distribution)
-    fitted_pdf = norm.pdf(x,loc = parameters[0],scale = parameters[1])
-    normal_pdf = norm.pdf(x)
+    # x = np.linspace(-5,5,100)
+    # # Generate the pdf (fitted distribution)
+    # fitted_pdf = norm.pdf(x,loc = parameters[0],scale = parameters[1])
+    # normal_pdf = norm.pdf(x)
+    #
+    # plt.plot(x,fitted_pdf,"red",label="Fitted normal dist",linestyle="dashed", linewidth=2)
+    # plt.plot(x,normal_pdf,"blue",label="Normal dist", linewidth=2)
+    # plt.hist(random_sample,normed=1,color="cyan",alpha=.3) #alpha, from 0 (transparent) to 1 (opaque)
+    # plt.title("Normal distribution fitting")
+    # # insert a legend in the plot (using label)
+    # plt.legend()
+    #
+    # # we finally show our work
+    # plt.show()
 
-    plt.plot(x,fitted_pdf,"red",label="Fitted normal dist",linestyle="dashed", linewidth=2)
-    plt.plot(x,normal_pdf,"blue",label="Normal dist", linewidth=2)
-    plt.hist(random_sample,normed=1,color="cyan",alpha=.3) #alpha, from 0 (transparent) to 1 (opaque)
-    plt.title("Normal distribution fitting")
-    # insert a legend in the plot (using label)
-    plt.legend()
 
-    # we finally show our work
-    plt.show()
-
-
-    indexErr = np.sqrt( covar[1][1] )
-    ampErr = np.sqrt( covar[0][0] ) * amp
+    # indexErr = np.sqrt( covar[1][1] )
+    # ampErr = np.sqrt( covar[0][0] ) * amp
 
     # plt.clf()
     # plt.subplot(2, 1, 1)
@@ -130,19 +130,19 @@ def sig_shape(result_set):
     year = np.array(list(result_set.keys()))[:, 2].reshape((-1, 1))
     last_column = np.array(list(result_set.values()))[:, -1]
 
-    x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1))
-    y = np.array([5, 20, 14, 32, 22, 38])
+    # x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1))
+    # y = np.array([5, 20, 14, 32, 22, 38])
 
     model = LinearRegression()
-    model.fit(x, y)
-    r2 = model.score(x, y)
+    model.fit(year, last_column)
+    r2 = model.score(year, last_column)
     slope = model.coef_
     print('coefficient of determination:', r2)
     print('intercept:', model.intercept_)
     print('slope:', model.coef_)
 
-    y_pred = model.predict(x)
-    print('predicted response:', y_pred)
+    # y_pred = model.predict(x)
+    # print('predicted response:', y_pred)
 
     p = (logistic(0.2, 2).cdf(-slope)) + 1 - (logistic(0.2, 2).cdf(slope))
     print(p)
