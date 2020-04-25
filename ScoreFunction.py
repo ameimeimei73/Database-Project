@@ -3,14 +3,19 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 from sklearn.linear_model import LinearRegression
 from scipy.stats import norm
+from scipy.stats import logistic
 
 
 def insight_score(result_set, type, total_tuples):
-    #result_set is a dictionary
+    # result_set is a dictionary
         #key: the subspace as a tuple
         #val: an array of measures in each level
-    #calculate the impact measure
+    # type
+        # 1 for point insight
+        # 2 for shape insight
+    # total_tuples: the total number of publications
 
+    #calculate the impact measure
     imp = 0
     for val in result_set.values():
         imp += val[0] / total_tuples
@@ -34,16 +39,16 @@ def sig_point(result_set):
 
 
     powerlaw = lambda i, a, b: a * (i ** b)
-    xdata = [ 3250, 5500, 10000, 32500, 55000, 77500, 100000, 200000]
-    ydata = [ 500, 288, 200, 113, 67, 52, 44, 5 ]
+    # xdata = [ 3250, 5500, 10000, 32500, 55000, 77500, 100000, 200000]
+    # ydata = [ 500, 288, 200, 113, 67, 52, 44, 5 ]
     # yerr = 0.2 * ydata
     # ydata += np.random.randn(100) * yerr
 
-    logx = np.log10(xdata)
-    logy = np.log10(ydata)
+    logx = np.log10(X)
+    logy = np.log10(Y)
 
-    fitfunc = lambda p, x: p[0] + p[1] * x
-    errfunc = lambda p, x, y:(fitfunc(p, x) - y)
+    powerlawfunc = lambda p, x: p[0] + p[1] * x
+    errfunc = lambda p, x, y:(powerlawfunc(p, x) - y)
 
     pinit = [1.0, -1.0]
     out = optimize.leastsq(errfunc, pinit, args=(logx, logy), full_output=1)
@@ -55,17 +60,20 @@ def sig_point(result_set):
 
     index = pfinal[1]
     amp = 10.0**pfinal[0]
-    pred = powerlaw(1100, amp, index)
 
-    err_array = ydata - powerlaw(xdata, amp, index)
+    pred = powerlaw(1, amp, index)
+
+    err_array = Y - powerlaw(X, amp, index)
     print("predicted value: ", pred)
     print(err_array)
-    random_sample = norm.rvs(loc=0,scale=1,size=200)
-    parameters = norm.fit(random_sample)
+    # random_sample = norm.rvs(loc=0,scale=1,size=200)
+    parameters = norm.fit(err_array)
+    p = 1 - norm(parameters[0], parameters[1]).cdf(pred - X_max)
+    print('p value:', p)
 
-    print('p value:', norm(parameters[0], parameters[1]).pdf(2))
+
+
     x = np.linspace(-5,5,100)
-
     # Generate the pdf (fitted distribution)
     fitted_pdf = norm.pdf(x,loc = parameters[0],scale = parameters[1])
     normal_pdf = norm.pdf(x)
@@ -115,7 +123,27 @@ def sig_point(result_set):
     #
     # y_pred = model.predict(x)
     # print('predicted response:', y_pred)
-
-
+    return 1 - p
 # Significance of shape insight
 def sig_shape(result_set):
+
+    year = np.array(list(result_set.keys()))[:, 2].reshape((-1, 1))
+    last_column = np.array(list(result_set.values()))[:, -1]
+
+    x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1))
+    y = np.array([5, 20, 14, 32, 22, 38])
+
+    model = LinearRegression()
+    model.fit(x, y)
+    r2 = model.score(x, y)
+    slope = model.coef_
+    print('coefficient of determination:', r2)
+    print('intercept:', model.intercept_)
+    print('slope:', model.coef_)
+
+    y_pred = model.predict(x)
+    print('predicted response:', y_pred)
+
+    p = (logistic(0.2, 2).cdf(-slope)) + 1 - (logistic(0.2, 2).cdf(slope))
+    print(p)
+    return r2*(1 - p)
