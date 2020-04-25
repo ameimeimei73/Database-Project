@@ -1,9 +1,10 @@
-from heapq import heappush, heappop
 from itertools import product
+# from insight_helper.py import EnumerateInsight
 
-H = []  # element (score, {"SG": SG, "Ce": ce, "type": T})
 aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
-dims = ["aid", "vid", "year", "type", "coauthor"]
+# normal_dims = ["aid", "vid", "type", "year", "coauthor"]
+normal_dims = [0, 1, 2, 3, 4]
+q4_dims = []
 ce_index = [0, 1, 2, 3, 4, 5, 6, 7]
 ###############   rank    %    davg  dprev  avg   min   max     sum
 compatible_ce = [[True, False, True, True, False, False, False, False],    # rank
@@ -15,43 +16,17 @@ compatible_ce = [[True, False, True, True, False, False, False, False],    # ran
                  [False, False, True, True, True, False, False, False],    # max
                  [True, False, True, True, False, True, True, False]]      # sum
 
-def extractors(index, data):
-    if index == 0:
-        # rank
-        pass
-    elif index == 1:
-        # percent
-        pass
-    elif index == 2:
-        # delta_avg
-        pass
-    elif index == 3:
-        # delta_prev
-        pass
-    elif index == 4:
-        # avg
-        pass
-    elif index == 5:
-        # min
-        pass
-    elif index == 6:
-        # max
-        pass
-    elif index == 7:
-        # sum
-        pass
 
-
-def get_all_ces(tau):
+def get_all_ces(tau, dims):
     if tau == 1:
         return ["COUNT"]
     elif tau > 1:
         this_round = list(product(ce_index, dims))
-        round_before = get_all_ces(tau-1)
+        round_before = get_all_ces(tau-1, dims)
         return list(product(round_before, this_round))
 
 
-def get_compatible_ces(tau):
+def get_compatible_ces(tau, dims):
     if tau == 1 or tau == 2:
         return get_all_ces(tau)
     elif tau > 2:
@@ -80,5 +55,27 @@ def get_compatible_ces(tau):
         return res
 
 
-print(len(get_all_ces(3)))
-print(len(get_compatible_ces(3)))
+# print(len(get_all_ces(3)))
+# print(len(get_compatible_ces(3)))
+
+def insights(R, tau, k):
+    H = []  # element (score, {"SG": SG, "Ce": ce, "type": T})
+
+    dims = []
+    if R == 1 or R == 2 or R == 3:
+        dims = normal_dims
+    elif R == 4:
+        dims = q4_dims
+    else:
+        print("Illegal dataset index")
+
+    O = get_compatible_ces(tau, dims)
+    d = len(dims)
+    for ce in O:
+        for i in range(d):
+            S = ['*', '*', '*', '*', '*']
+            # EnumerateInsight(S, i, ce, H, R, k)
+    return H
+
+
+print(get_all_ces(2, normal_dims))
