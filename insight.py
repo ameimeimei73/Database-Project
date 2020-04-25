@@ -1,7 +1,5 @@
-from heapq import heappush, heappop
 from itertools import product
 
-H = []  # element (score, {"SG": SG, "Ce": ce, "type": T})
 aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
 dims = ["aid", "vid", "year", "type", "coauthor"]
 ce_index = [0, 1, 2, 3, 4, 5, 6, 7]
