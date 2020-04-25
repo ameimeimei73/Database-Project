@@ -1,7 +1,9 @@
 from itertools import product
+from insight_helper.py import EnumerateInsight
 
 aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
-dims = ["aid", "vid", "year", "type", "coauthor"]
+normal_dims = ["aid", "vid", "year", "type", "coauthor"]
+q4_dims = []
 ce_index = [0, 1, 2, 3, 4, 5, 6, 7]
 ###############   rank    %    davg  dprev  avg   min   max     sum
 compatible_ce = [[True, False, True, True, False, False, False, False],    # rank
@@ -40,7 +42,7 @@ def extractors(index, data):
         pass
 
 
-def get_all_ces(tau):
+def get_all_ces(tau, dims):
     if tau == 1:
         return ["COUNT"]
     elif tau > 1:
@@ -49,7 +51,7 @@ def get_all_ces(tau):
         return list(product(round_before, this_round))
 
 
-def get_compatible_ces(tau):
+def get_compatible_ces(tau, dims):
     if tau == 1 or tau == 2:
         return get_all_ces(tau)
     elif tau > 2:
@@ -78,5 +80,24 @@ def get_compatible_ces(tau):
         return res
 
 
-print(len(get_all_ces(3)))
-print(len(get_compatible_ces(3)))
+# print(len(get_all_ces(3)))
+# print(len(get_compatible_ces(3)))
+
+def insights(R, tau, k):
+    H = []  # element (score, {"SG": SG, "Ce": ce, "type": T})
+
+    dims = []
+    if R == 1 or R == 2 or R == 3:
+        dims = normal_dims
+    elif R == 4:
+        dims = q4_dims
+    else:
+        print("Illegal dataset index")
+
+    O = get_compatible_ces(tau, dims)
+    d = len(dims)
+    for ce in O:
+        for i in range(d):
+            S = ['*', '*', '*', '*', '*']
+            EnumerateInsight(S, i, ce, H)
+    return H
