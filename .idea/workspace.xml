@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3a6eb47f-403e-4344-a5ab-6c9671f5ce4b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extractor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Extractor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_sql/q2dataset.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dataset_sql/q2dataset.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/insight_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/insight_helper.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -73,6 +74,7 @@
       <option name="presentableId" value="Default" />
       <updated>1587778954666</updated>
       <workItem from="1587861734468" duration="2176000" />
+      <workItem from="1587864394330" duration="1699000" />
     </task>
     <servers />
   </component>
@@ -84,7 +86,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

@@ -8,5 +8,5 @@ create table copapers(
 
 INSERT INTO copapers 
 SELECT P.id, P.venue 
-FROM papers P, coau_papers AS M
+FROM papers_small P, coau_papers AS M
 WHERE P.id = M.id AND (M.coauthors > 1);

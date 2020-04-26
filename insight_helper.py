@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import heapq
+from ScoreFunction import insight_score
 
 authorid = pd.read_csv('authorid.csv', index_col = False, header = None)
 authorid = list(np.array(authorid).reshape(-1))
@@ -17,15 +18,15 @@ venueyear = list(np.array(venueyear).reshape(-1))
 coauthors = pd.read_csv('coauthors.csv', index_col = False, header = None)
 coauthors = list(np.array(coauthors).reshape(-1))
 
+total_tuples = len(authorid) + len(venueid) + len(venuetype) + len(venueyear) + len(coauthors)
 dimesions = [authorid, venueid, venuetype, venueyear, coauthors]
-type = ['Point', 'Shape']
-
+type = [1, 2]
 
 def EnumerateInsight(s, di, ce, H, R, k):
     if isValid(s, di, ce):
         phi = extract(s, di, ce)
         for t in type:
-            score = iii
+            score = insight_score(phi, t, total_tuples)
             if len(H) < k:
                 heappush(H, (score, [s, di, ce, t]))
             elif len(H) == k:
