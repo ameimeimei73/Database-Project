@@ -2,14 +2,6 @@ from copy import deepcopy
 import psycopg2
 from psycopg2 import Error
 
-connection = psycopg2.connect(user="postgres",
-                              password="123456",
-                              host="localhost",
-                              port="5432",
-                              database="cs645")
-
-cursor = connection.cursor()
-
 def extractors(index, res_set, S):
 
     # get the last row of data
@@ -127,27 +119,27 @@ def create_sql(S, R):
         conditions += "WHERE "
 
     if cond_arr[0] == 1:
-        conditions += "aid = " + S[0]
+        conditions += "aid = " + str(S[0])
         if sum(cond_arr[1:]) > 0:
             conditions += " and "
 
     if cond_arr[1] == 1:
-        conditions += "vid = " + S[1]
+        conditions += "vid = " + str(S[1])
         if sum(cond_arr[2:]) > 0:
             conditions += " and "
 
     if cond_arr[2] == 1:
-        conditions += "type = " + S[2]
+        conditions += "type = " + str(S[2])
         if sum(cond_arr[3:]) > 0:
             conditions += " and "
 
     if cond_arr[3] == 1:
-        conditions += "year = " + S[3]
+        conditions += "year = " + str(S[3])
         if sum(cond_arr[4:]) > 0:
             conditions += " and "
 
     if cond_arr[4] == 1:
-        conditions += "coauthors = " + S[4]
+        conditions += "coauthors = " + str(S[4])
 
 
     request = "SELECT COUNT(*) " \
@@ -164,7 +156,7 @@ def extract(S, di, doms, ce, tau, R):
         S_prime[di] = v
         M_prime = recur_extract(S_prime, tau, ce, doms, R)
         phi[tuple(S_prime)] = M_prime
-
+    print("return result : ", phi)
     return phi
 
 
@@ -196,15 +188,22 @@ def recur_extract(S, level, ce, doms, R):
 
 
 def count_paper(S, R):
+    connection = psycopg2.connect(user="postgres",
+                                  password="123456",
+                                  host="localhost",
+                                  port="5432",
+                                  database="cs645")
+
+    cursor = connection.cursor()
+
     sql = create_sql(S, R)
     cursor.execute(sql)
     record = cursor.fetchone()
     res = record[0]
 
+    if (connection):
+        cursor.close()
+        connection.close()
     return res
 
 
-if (connection):
-    cursor.close()
-    connection.close()
-    print("PostgreSQL connection is closed")

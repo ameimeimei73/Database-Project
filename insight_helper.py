@@ -44,7 +44,7 @@ def EnumerateInsight(s, di, ce, H, R, k, tau):
 
 def isValid(s, di, ce):
     n = len(ce)
-    print(n)
+
     for i in range(1, n):
         if ce[i][1] != di and s[ce[i][1]] == '*':
             return False
