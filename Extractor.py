@@ -10,100 +10,92 @@ connection = psycopg2.connect(user="postgres",
 
 cursor = connection.cursor()
 
-def extractors(index, data):
+def extractors(index, res_set, S):
+
+    # get the last row of data
+    data = {}
+    for e in res_set:
+        cur_val = res_set[e]
+        data[e] = cur_val[-1]
+
+
     # rank
     if index == 0:
+
         rank_arr = []
         # put all data in array with index as the rank
-        for elem in data:
+        for key in data:
             if len(rank_arr) == 0:
-                rank_arr.append(elem)
+                rank_arr.append((key, data[key]))
             else:
                 inserted = False
                 for i in range(len(rank_arr)):
-                    if elem[1] > rank_arr[i][1]:
-                        rank_arr.insert(i, elem)
+                    if data[key] > rank_arr[i][1]:
+                        rank_arr.insert(i, (key, data[key]))
                         inserted = True
                         break
 
                 if not inserted:
-                    rank_arr.append(elem)
+                    rank_arr.append((key, data[key]))
 
-        ret = set()
+        ret = 0
         for i in range(len(rank_arr)):
-            ret.add((rank_arr[i][0], i))
+            if rank_arr[i][0] == S:
+                ret = i
+                break
 
         return ret
 
     # percent
     elif index == 1:
         denom = 0
-        for elem in data:
-            denom += elem[1]
+        for key in data:
+            denom += data[key]
 
-        ret = set()
-        for elem in data:
-            percent = round(elem[1] / denom * 100, 2)
-            ret.add((elem[0], percent))
+        ret = round(data[S] / denom * 100, 2)
+
         return ret
 
     # delta_avg
     elif index == 2:
         all_sum = 0
-        for elem in data:
-            all_sum += elem[1]
+        for key in data:
+            all_sum += data[key]
 
         avg = all_sum / len(data)
 
-        ret = set()
-        for elem in data:
-            del_avg = elem[1] - avg
-            ret.add((elem[0], del_avg))
+        ret = data[S] - avg
+
         return ret
 
     # delta_prev
     elif index == 3:
-        temp_S = data[0][0]
-        if temp_S[3] == '*':
-            return data  # if there is no year, do nothing
 
         rank_arr = []
         # put all data in array with index as the rank of year
-        for elem in data:
+        for key in data:
             if len(rank_arr) == 0:
-                rank_arr.append(elem)
+                rank_arr.append((key, data[key]))
             else:
                 inserted = False
                 for i in range(len(rank_arr)-1):
-                    if elem[0][3] < rank_arr[i+1][0][3]:
-                        rank_arr.insert(i, elem)
+                    if key[3] < rank_arr[i+1][0][3]:
+                        rank_arr.insert(i, (key, data[key]))
                         inserted = True
                         break
 
                 if not inserted:
-                    rank_arr.append(elem)
+                    rank_arr.append((key, data[key]))
 
-        ret = set()
-        ret.add((rank_arr[0][0], rank_arr[0][1]))  # the first one assumes to be a change from 0
-        for i in range(1, len(rank_arr)):
-            del_prev = rank_arr[i][1] - rank_arr[i-1][1]
-            ret.add((rank_arr[i][0], del_prev))
+        ret = 0
+        for i in range(len(rank_arr)):
+            if rank_arr[i][0] == S and i > 0:
+                ret = rank_arr[i][1] - rank_arr[i-1][1]
+                break
+            elif rank_arr[i][0] == S and i == 0:  # the first one assumes to be changed from 0
+                ret = rank_arr[i][1]
 
         return ret
-
-    # avg
-    elif index == 4:
-
-        pass
-    elif index == 5:
-        # min
-        pass
-    elif index == 6:
-        # max
-        pass
-    elif index == 7:
-        # sum
-        pass
 
 
 def create_sql(S, R):
@@ -159,30 +151,39 @@ def create_sql(S, R):
 
 
 def extract(S, di, doms, ce, tau, R):
-    phi = set()
+    phi = {}
     for v in doms[di]:
         S_prime = deepcopy(S)
         S_prime[di] = v
-        M_prime = recur_extract(S_prime, tau, ce)
-        phi.add((S_prime, M_prime))
+        M_prime = recur_extract(S_prime, tau, ce, doms, R)
+        phi[S_prime] = M_prime
 
     return phi
 
 
 def recur_extract(S, level, ce, doms, R):
     if level > 1:
-        res_set = set()
-        D = ce[level-1][1]
+        res_set = {}
+        D = ce[level-1][1]  # level starts with 1 but array index starts 0
+        index = ce[level-1][0]
         for v in doms[D]:
             Sv = deepcopy(S)
             Sv[D] = v
             Mv_prime = recur_extract(Sv, level-1, ce, doms)
-            res_set.add((Sv, Mv_prime))
+            res_set[Sv] = [Mv_prime]
 
-        M_prime = extractors(D, res_set)
+        M_prime = res_set[S]
+
+        # only when D == 3 (year), delta_prev (index == 3) is applicable
+        if (index == 3 and D == 3) or (index != 3):
+            extracted_result = extractors(index, res_set, S)
+            M_prime.append(extracted_result)
+
+        # if want to calculate delta_prev but dimension is not year i.e. all years are the same
+        # M_prime will not have new values
 
     else:
-        M_prime = count_paper(S, R)  # should be the returned value of create_sql(S, R)
+        M_prime = [count_paper(S, R)]  # should be the returned value of create_sql(S, R)
 
     return M_prime
 
