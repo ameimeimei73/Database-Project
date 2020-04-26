@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import heapq
 from ScoreFunction import insight_score
+from Extractor import extract
 
 authorid = pd.read_csv('authorid.csv', index_col = False, header = None)
 authorid = list(np.array(authorid).reshape(-1))
@@ -18,15 +19,14 @@ venueyear = list(np.array(venueyear).reshape(-1))
 coauthors = pd.read_csv('coauthors.csv', index_col = False, header = None)
 coauthors = list(np.array(coauthors).reshape(-1))
 
-total_tuples = len(authorid) + len(venueid) + len(venuetype) + len(venueyear) + len(coauthors)
 dimesions = [authorid, venueid, venuetype, venueyear, coauthors]
 type = [1, 2]
 
-def EnumerateInsight(s, di, ce, H, R, k):
+def EnumerateInsight(s, di, ce, H, R, k, tau):
     if isValid(s, di, ce):
-        phi = extract(s, di, ce)
+        phi = extract(s, di, dimesions, ce, tau, R)
         for t in type:
-            score = insight_score(phi, t, total_tuples)
+            score = insight_score(phi, t, 270687)
             if len(H) < k:
                 heapq.heappush(H, (score, [s, di, ce, t]))
             elif len(H) == k:
@@ -40,10 +40,11 @@ def EnumerateInsight(s, di, ce, H, R, k):
         si[di] = d
         for j in range(0, len(s)):
             if si[j] == '*':
-                EnumerateInsight(si, j, ce, H, R, k)
+                EnumerateInsight(si, j, ce, H, R, k, tau)
 
 def isValid(s, di, ce):
     n = len(ce)
+    print(n)
     for i in range(1, n):
         if ce[i][1] != di and s[ce[i][1]] == '*':
             return False

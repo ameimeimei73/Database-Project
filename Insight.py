@@ -1,5 +1,5 @@
 from itertools import product
-# from insight_helper.py import EnumerateInsight
+from insight_helper import EnumerateInsight
 
 aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
 # normal_dims = ["aid", "vid", "type", "year", "coauthor"]
@@ -16,7 +16,7 @@ compatible_ce = [[True, False, True, True],    # rank
 
 def get_all_ces(tau, dims):
     if tau == 1:
-        return ["COUNT"]
+        return list("COUNT")
     elif tau > 1:
         this_round = list(product(ce_index, dims))
         round_before = get_all_ces(tau-1, dims)
@@ -25,10 +25,10 @@ def get_all_ces(tau, dims):
 
 def get_compatible_ces(tau, dims):
     if tau == 1 or tau == 2:
-        return get_all_ces(tau)
+        return get_all_ces(tau, dims)
     elif tau > 2:
         res = []
-        all_ces = get_all_ces(tau)
+        all_ces = get_all_ces(tau, dims)
         for item in all_ces:
             new_item = []
 
@@ -71,7 +71,7 @@ def insights(R, tau, k):
     for ce in O:
         for i in range(d):
             S = ['*', '*', '*', '*', '*']
-            # EnumerateInsight(S, i, ce, H, R, k)
+            EnumerateInsight(S, i, ce, H, R, k, tau)
     return H
 
 
