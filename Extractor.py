@@ -22,29 +22,34 @@ def extractors(index, res_set, S):
     # rank
     if index == 0:
 
-        rank_arr = []
-        # put all data in array with index as the rank
-        for key in data:
-            if len(rank_arr) == 0:
-                rank_arr.append((key, data[key]))
-            else:
-                inserted = False
-                for i in range(len(rank_arr)):
-                    if data[key] > rank_arr[i][1]:
-                        rank_arr.insert(i, (key, data[key]))
-                        inserted = True
-                        break
+        temp = sorted(data.items(), key=lambda x: x[1], reverse=True)
+        for i in range(len(temp)):
+            if temp[i][0] == S:
+                return i+1  # rank starts from 1
 
-                if not inserted:
-                    rank_arr.append((key, data[key]))
-
-        ret = 0
-        for i in range(len(rank_arr)):
-            if rank_arr[i][0] == S:
-                ret = i
-                break
-
-        return ret
+        # rank_arr = []
+        # # put all data in array with index as the rank
+        # for key in data:
+        #     if len(rank_arr) == 0:
+        #         rank_arr.append((key, data[key]))
+        #     else:
+        #         inserted = False
+        #         for i in range(len(rank_arr)):
+        #             if data[key] > rank_arr[i][1]:
+        #                 rank_arr.insert(i, (key, data[key]))
+        #                 inserted = True
+        #                 break
+        #
+        #         if not inserted:
+        #             rank_arr.append((key, data[key]))
+        #
+        # ret = 0
+        # for i in range(len(rank_arr)):
+        #     if rank_arr[i][0] == S:
+        #         ret = i
+        #         break
+        #
+        # return ret
 
     # percent
     elif index == 1:
@@ -71,31 +76,41 @@ def extractors(index, res_set, S):
     # delta_prev
     elif index == 3:
 
-        rank_arr = []
-        # put all data in array with index as the rank of year
-        for key in data:
-            if len(rank_arr) == 0:
-                rank_arr.append((key, data[key]))
-            else:
-                inserted = False
-                for i in range(len(rank_arr)-1):
-                    if key[3] < rank_arr[i+1][0][3]:
-                        rank_arr.insert(i, (key, data[key]))
-                        inserted = True
-                        break
+        temp = sorted(data.items(), key=lambda x: x[1][3])  # sort by year
 
-                if not inserted:
-                    rank_arr.append((key, data[key]))
 
-        ret = 0
-        for i in range(len(rank_arr)):
-            if rank_arr[i][0] == S and i > 0:
-                ret = rank_arr[i][1] - rank_arr[i-1][1]
-                break
-            elif rank_arr[i][0] == S and i == 0:  # the first one assumes to be changed from 0
-                ret = rank_arr[i][1]
+        for i in range(len(temp)):
+            if temp[i][0] == S:
+                if i == 0:
+                    return temp[0][1]
+                else:
+                    return temp[i][1] - temp[i-1][1]
 
-        return ret
+        # rank_arr = []
+        # # put all data in array with index as the rank of year
+        # for key in data:
+        #     if len(rank_arr) == 0:
+        #         rank_arr.append((key, data[key]))
+        #     else:
+        #         inserted = False
+        #         for i in range(len(rank_arr)-1):
+        #             if key[3] < rank_arr[i+1][0][3]:
+        #                 rank_arr.insert(i, (key, data[key]))
+        #                 inserted = True
+        #                 break
+        #
+        #         if not inserted:
+        #             rank_arr.append((key, data[key]))
+        #
+        # ret = 0
+        # for i in range(len(rank_arr)):
+        #     if rank_arr[i][0] == S and i > 0:
+        #         ret = rank_arr[i][1] - rank_arr[i-1][1]
+        #         break
+        #     elif rank_arr[i][0] == S and i == 0:  # the first one assumes to be changed from 0
+        #         ret = rank_arr[i][1]
+        #
+        # return ret
 
 
 def create_sql(S, R):
@@ -179,6 +194,7 @@ def recur_extract(S, level, ce, doms, R):
 
     return M_prime
 
+
 def count_paper(S, R):
     sql = create_sql(S, R)
     cursor.execute(sql)
@@ -186,6 +202,7 @@ def count_paper(S, R):
     res = record[0]
 
     return res
+
 
 if (connection):
     cursor.close()
