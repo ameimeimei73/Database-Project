@@ -157,6 +157,8 @@ def extract(S, di, doms, ce, tau, R):
         M_prime = recur_extract(S_prime, tau, ce)
         phi.add((S_prime, M_prime))
 
+    return phi
+
 
 def recur_extract(S, level, ce, doms, R):
     if level > 1:

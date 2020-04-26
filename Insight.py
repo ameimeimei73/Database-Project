@@ -5,16 +5,13 @@ aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
 # normal_dims = ["aid", "vid", "type", "year", "coauthor"]
 normal_dims = [0, 1, 2, 3, 4]
 q4_dims = []
-ce_index = [0, 1, 2, 3, 4, 5, 6, 7]
-###############   rank    %    davg  dprev  avg   min   max     sum
-compatible_ce = [[True, False, True, True, False, False, False, False],    # rank
-                 [True, False, True, True, False, True, True, False],      # %
-                 [True, False, True, True, False, True, True, False],      # davg
-                 [True, False, True, True, True, True, True, False],       # dprev
-                 [True, False, False, True, True, True, True, False],      # avg
-                 [False, False, True, True, True, False, False, False],    # min
-                 [False, False, True, True, True, False, False, False],    # max
-                 [True, False, True, True, False, True, True, False]]      # sum
+ce_index = [0, 1, 2, 3]
+###############   rank    %    davg  dprev
+compatible_ce = [[True, False, True, True],    # rank
+                 [True, False, True, True],      # %
+                 [True, False, True, True],      # davg
+                 [True, False, True, True]]       # dprev
+
 
 
 def get_all_ces(tau, dims):
