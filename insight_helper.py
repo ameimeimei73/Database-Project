@@ -7,26 +7,22 @@ from Extractor import extract
 authorid = pd.read_csv('authorid.csv', index_col = False, header = None)
 authorid = list(np.array(authorid).reshape(-1))
 
-venueid = pd.read_csv('venueid.csv', index_col = False, header = None)
-venueid = list(np.array(venueid).reshape(-1))
-
-venuetype = pd.read_csv('venuetype.csv', index_col = False, header = None)
-venuetype = list(np.array(venuetype).reshape(-1))
-
 venueyear = pd.read_csv('venueyear.csv', index_col = False, header = None)
 venueyear = list(np.array(venueyear).reshape(-1))
 
 coauthors = pd.read_csv('coauthors.csv', index_col = False, header = None)
 coauthors = list(np.array(coauthors).reshape(-1))
 
-dimesions = [authorid, venueid, venuetype, venueyear, coauthors]
+dimesions = [authorid, venueyear, coauthors]
 type = [1, 2]
 
 def EnumerateInsight(s, di, ce, H, R, k, tau):
     if isValid(s, di, ce, R):
         phi = extract(s, di, dimesions, ce, tau, R)
         for t in type:
-            score = insight_score(phi, t, 270687)
+            if (t == 2 and s[1] == '*'):
+                continue
+            score = insight_score(phi, t, 1662)
             if len(H) < k:
                 heapq.heappush(H, (score, [s, di, ce, t]))
             elif len(H) == k:

@@ -36,7 +36,7 @@ def sig_point(result_set):
     last_column = np.array(list(result_set.values()))[:, -1]
     lc_sort = np.sort(last_column)[::-1]
     Y = lc_sort[1:]
-    X = np.arange(2, len(Y) + 2)
+    X = np.arange(3, len(Y) + 3)
     Y_max = lc_sort[0]
 
     powerlaw = lambda i, a, b: a * (i ** b)
@@ -62,7 +62,7 @@ def sig_point(result_set):
     index = pfinal[1]
     amp = 10.0**pfinal[0]
 
-    pred = powerlaw(1, amp, index)
+    pred = powerlaw(2, amp, index)
 
     err_array = Y - powerlaw(X, amp, index)
     print("predicted value: ", pred)
@@ -127,7 +127,7 @@ def sig_point(result_set):
 # Significance of shape insight
 def sig_shape(result_set):
 
-    year = np.array(list(result_set.keys()))[:, 2].reshape((-1, 1))
+    year = np.array(list(result_set.keys()))[:, 1].reshape((-1, 1))
     last_column = np.array(list(result_set.values()))[:, -1]
 
     # x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1))
