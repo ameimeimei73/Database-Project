@@ -118,34 +118,34 @@ def create_sql(S, R):
     if cond_arr[0] == 1:
         conditions += "a.id = " + S[0]
         if sum(cond_arr[1:]) > 0:
-            conditions += ", "
+            conditions += " and "
 
     if cond_arr[1] == 1:
         conditions += "v.id = " + S[1]
         if sum(cond_arr[2:]) > 0:
-            conditions += ", "
+            conditions += " and "
 
     if cond_arr[2] == 1:
         conditions += "v.type = " + S[2]
         if sum(cond_arr[2:]) > 0:
-            conditions += ", "
+            conditions += " and "
 
     if cond_arr[3] == 1:
         conditions += "v.year = " + S[3]
-        if sum(cond_arr[2:]) > 0:
-            conditions += ", "
+        if sum(cond_arr[3:]) > 0:
+            conditions += " and "
 
-    if cond_arr[1] == 1:
+    if cond_arr[4] == 1:
         conditions += "co.coauthors = " + S[4]
 
 
     request = "SELECT COUNT(p.id)" \
-              "FROM authors" + suffix + "a, " \
-                    "venue" + suffix + "v, " \
-                    "papers" + suffix + "p, " \
-                    "paperauths" + suffix + "pa, " \
-                    "co_authors" + suffix + "co" \
-              "WHERE a.id = pa.authid, p.id = pa.paperid, v.id = p.venue" + conditions + ";"
+              "FROM authors" + suffix + " a, " \
+                    "venue" + suffix + " v, " \
+                    "papers" + suffix + " p, " \
+                    "paperauths" + suffix + " pa, " \
+                    "coau_papers" + suffix + " co" \
+              "WHERE a.id = pa.authid and p.id = pa.paperid and v.id = p.venue and p.id = co.id " + conditions + ";"
 
     return request
 
@@ -156,7 +156,7 @@ def extract(S, di, doms, ce, tau, R):
         S_prime = deepcopy(S)
         S_prime[di] = v
         M_prime = recur_extract(S_prime, tau, ce, doms, R)
-        phi[S_prime] = M_prime
+        phi[tuple(S_prime)] = M_prime
 
     return phi
 
@@ -170,13 +170,13 @@ def recur_extract(S, level, ce, doms, R):
             Sv = deepcopy(S)
             Sv[D] = v
             Mv_prime = recur_extract(Sv, level-1, ce, doms)
-            res_set[Sv] = [Mv_prime]
+            res_set[tuple(Sv)] = Mv_prime
 
-        M_prime = res_set[S]
+        M_prime = res_set[tuple(S)]
 
         # only when D == 3 (year), delta_prev (index == 3) is applicable
         if (index == 3 and D == 3) or (index != 3):
-            extracted_result = extractors(index, res_set, S)
+            extracted_result = extractors(index, res_set, tuple(S))
             M_prime.append(extracted_result)
 
         # if want to calculate delta_prev but dimension is not year i.e. all years are the same
