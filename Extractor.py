@@ -1,5 +1,14 @@
 from copy import deepcopy
+import psycopg2
+from psycopg2 import Error
 
+connection = psycopg2.connect(user="postgres",
+                              password="123456",
+                              host="localhost",
+                              port="5432",
+                              database="cs645")
+
+cursor = connection.cursor()
 
 def extractors(index, data):
     # rank
@@ -173,6 +182,19 @@ def recur_extract(S, level, ce, doms, R):
         M_prime = extractors(D, res_set)
 
     else:
-        M_prime = set()  # should be the returned value of create_sql(S, R)
+        M_prime = count_paper(S, R)  # should be the returned value of create_sql(S, R)
 
     return M_prime
+
+def count_paper(S, R):
+    sql = create_sql(S, R)
+    cursor.execute(sql)
+    record = cursor.fetchone()
+    res = record[0]
+
+    return res
+
+if (connection):
+    cursor.close()
+    connection.close()
+    print("PostgreSQL connection is closed")
