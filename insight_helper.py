@@ -42,12 +42,17 @@ def EnumerateInsight(s, di, ce, H, R, k, tau):
             if si[j] == '*':
                 EnumerateInsight(si, j, ce, H, R, k, tau)
 
-def isValid(s, di, ce):
+def isValid(s, di, ce, R):
     n = len(ce)
 
-    for i in range(1, n):
-        if ce[i][1] != di and s[ce[i][1]] == '*':
-            return False
+    if R == 1 or R == 2:
+        for i in range(1, n):
+            if ce[i][1] != di and s[ce[i][1]] == '*':
+                return False
+    elif R == 3:
+        for i in range(1, n):
+            if ce[i][1] != di and s[ce[i][1]] == '*' and di != 0 and ce[n-1][1] != 0: # s[0] == '*': !(ce[n-1][1] == 0 or di == 0)
+                return False
     return True
 
 

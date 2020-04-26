@@ -39,7 +39,6 @@ def sig_point(result_set):
     X = np.arange(2, len(Y) + 2)
     Y_max = lc_sort[0]
 
-
     powerlaw = lambda i, a, b: a * (i ** b)
     # xdata = [ 3250, 5500, 10000, 32500, 55000, 77500, 100000, 200000]
     # ydata = [ 500, 288, 200, 113, 67, 52, 44, 5 ]
