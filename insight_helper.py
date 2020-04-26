@@ -23,7 +23,7 @@ dimesions = [authorid, venueid, venuetype, venueyear, coauthors]
 type = [1, 2]
 
 def EnumerateInsight(s, di, ce, H, R, k, tau):
-    if isValid(s, di, ce):
+    if isValid(s, di, ce, R):
         phi = extract(s, di, dimesions, ce, tau, R)
         for t in type:
             score = insight_score(phi, t, 270687)
