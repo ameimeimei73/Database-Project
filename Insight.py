@@ -16,7 +16,9 @@ compatible_ce = [[True, False, True, True],    # rank
 
 def get_all_ces(tau, dims):
     if tau == 1:
-        return list("COUNT")
+        lst = []
+        lst.append((-1,))
+        return lst
     elif tau > 1:
         this_round = list(product(ce_index, dims))
         round_before = get_all_ces(tau-1, dims)
@@ -32,7 +34,7 @@ def get_compatible_ces(tau, dims):
         for item in all_ces:
             new_item = []
 
-            while len(item) > 1 and type(item) != type('COUNT'):  # remove nested tuples from product operation
+            while len(item) > 1:  # remove nested tuples from product operation
                 new_item.append(item[1])
                 item = item[0]
             new_item.append(item)
@@ -73,6 +75,3 @@ def insights(R, tau, k):
             S = ['*', '*', '*', '*', '*']
             EnumerateInsight(S, i, ce, H, R, k, tau)
     return H
-
-
-print(get_all_ces(2, normal_dims))
