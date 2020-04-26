@@ -5,8 +5,7 @@ from sklearn.linear_model import LinearRegression
 from scipy.stats import norm
 from scipy.stats import logistic
 
-
-def insight_score(result_set, type, total_tuples):
+def insight_score(result_set, type, total_tuples, R):
     # result_set is a dictionary
         #key: the subspace as a tuple
         #val: an array of measures in each level
@@ -14,6 +13,7 @@ def insight_score(result_set, type, total_tuples):
         # 1 for point insight
         # 2 for shape insight
     # total_tuples: the total number of publications
+    # R question number
 
     #calculate the impact measure
     imp = 0
