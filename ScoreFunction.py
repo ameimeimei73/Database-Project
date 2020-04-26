@@ -145,5 +145,5 @@ def sig_shape(result_set):
     # print('predicted response:', y_pred)
 
     p = (logistic(0.2, 2).cdf(-slope)) + 1 - (logistic(0.2, 2).cdf(slope))
-    print(p)
+    print('p value:', p)
     return r2*(1 - p)
