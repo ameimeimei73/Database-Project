@@ -28,13 +28,13 @@ def EnumerateInsight(s, di, ce, H, R, k):
         for t in type:
             score = insight_score(phi, t, total_tuples)
             if len(H) < k:
-                heappush(H, (score, [s, di, ce, t]))
+                heapq.heappush(H, (score, [s, di, ce, t]))
             elif len(H) == k:
                 uk = H[0]
                 ubk = uk[0]
                 if score > ubk:
-                    heappush(H, (score, [s, di, ce, t]))
-                    heappop(H)
+                    heapq.heappush(H, (score, [s, di, ce, t]))
+                    heapq.heappop(H)
     for d in dimesions[di]:
         si = s
         si[di] = d
