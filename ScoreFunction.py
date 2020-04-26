@@ -5,6 +5,8 @@ from sklearn.linear_model import LinearRegression
 from scipy.stats import norm
 from scipy.stats import logistic
 
+
+
 def insight_score(result_set, type, total_tuples):
     # result_set is a dictionary
         #key: the subspace as a tuple
@@ -33,9 +35,9 @@ def sig_point(result_set):
 
     last_column = np.array(list(result_set.values()))[:, -1]
     lc_sort = np.sort(last_column)[::-1]
-    X = lc_sort[1:]
-    Y = np.arrange(2, len(X) + 2)
-    X_max = lc_sort[0]
+    Y = lc_sort[1:]
+    X = np.arange(2, len(Y) + 2)
+    Y_max = lc_sort[0]
 
 
     powerlaw = lambda i, a, b: a * (i ** b)
@@ -65,10 +67,9 @@ def sig_point(result_set):
 
     err_array = Y - powerlaw(X, amp, index)
     print("predicted value: ", pred)
-    print(err_array)
     # random_sample = norm.rvs(loc=0,scale=1,size=200)
     parameters = norm.fit(err_array)
-    p = 1 - norm(parameters[0], parameters[1]).cdf(pred - X_max)
+    p = 1 - norm(parameters[0], parameters[1]).cdf(pred - Y_max)
     print('p value:', p)
 
 
