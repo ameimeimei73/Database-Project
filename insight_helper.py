@@ -22,42 +22,32 @@ total_tuples = len(authorid) + len(venueid) + len(venuetype) + len(venueyear) + 
 dimesions = [authorid, venueid, venuetype, venueyear, coauthors]
 type = [1, 2]
 
-print(len(authorid))
-print(len(venueid))
-print(len(venueyear))
-print (len(venuetype))
-print(len(coauthors))
+def EnumerateInsight(s, di, ce, H, R, k):
+    if isValid(s, di, ce):
+        phi = extract(s, di, ce)
+        for t in type:
+            score = insight_score(phi, t, total_tuples)
+            if len(H) < k:
+                heappush(H, (score, [s, di, ce, t]))
+            elif len(H) == k:
+                uk = H[0]
+                ubk = uk[0]
+                if score > ubk:
+                    heappush(H, (score, [s, di, ce, t]))
+                    heappop(H)
+    for d in dimesions[di]:
+        si = s
+        si[di] = d
+        for j in range(0, len(s)):
+            if si[j] == '*':
+                EnumerateInsight(si, j, ce, H, R, k)
 
-# def EnumerateInsight(s, di, ce, H, R, k):
-#     if isValid(s, di, ce):
-#         phi = extract(s, di, ce)
-#         for t in type:
-#             score = insight_score(phi, t, total_tuples)
-#             if len(H) < k:
-#                 heappush(H, (score, [s, di, ce, t]))
-#             elif len(H) == k:
-#                 uk = H[0]
-#                 ubk = uk[0]
-#                 if score > ubk:
-#                     heappush(H, (score, [s, di, ce, t]))
-#                     heappop(H)
-#     for d in dimesions[di]:
-#         si = s
-#         si[di] = d
-#         for j in range(0, len(s)):
-#             if si[j] == '*':
-#                 EnumerateInsight(si, j, ce, H, R, k)
-#
-# def isValid(s, di, ce):
-#     n = len(ce)
-#     for i in range(1, n):
-#         if ce[i][1] != di and s[ce[i][1]] == '*':
-#             return False
-#     return True
-
-
-
-
+def isValid(s, di, ce):
+    n = len(ce)
+    for i in range(1, n):
+        if ce[i][1] != di and s[ce[i][1]] == '*':
+            return False
+    return True
 
 
 
