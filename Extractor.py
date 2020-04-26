@@ -99,53 +99,45 @@ def extractors(index, res_set, S):
 
 
 def create_sql(S, R):
-    suffix = ""
-    if R == 2:
-        suffix = "_2"
-    elif R == 3:
-        suffix = "_3"
-    elif R == 4:
-        suffix = "_4"
 
     conditions = ""
-    cond_arr = []
+    cond_arr = [None] * 5
     cond_arr[0] = 0 if S[0] == '*' else 1
     cond_arr[1] = 0 if S[1] == '*' else 1
     cond_arr[2] = 0 if S[2] == '*' else 1
     cond_arr[3] = 0 if S[3] == '*' else 1
     cond_arr[4] = 0 if S[4] == '*' else 1
 
+    if sum(cond_arr) > 0:
+        conditions += "WHERE "
+
     if cond_arr[0] == 1:
-        conditions += "a.id = " + S[0]
+        conditions += "aid = " + S[0]
         if sum(cond_arr[1:]) > 0:
             conditions += " and "
 
     if cond_arr[1] == 1:
-        conditions += "v.id = " + S[1]
+        conditions += "vid = " + S[1]
         if sum(cond_arr[2:]) > 0:
             conditions += " and "
 
     if cond_arr[2] == 1:
-        conditions += "v.type = " + S[2]
-        if sum(cond_arr[2:]) > 0:
-            conditions += " and "
-
-    if cond_arr[3] == 1:
-        conditions += "v.year = " + S[3]
+        conditions += "type = " + S[2]
         if sum(cond_arr[3:]) > 0:
             conditions += " and "
 
+    if cond_arr[3] == 1:
+        conditions += "year = " + S[3]
+        if sum(cond_arr[4:]) > 0:
+            conditions += " and "
+
     if cond_arr[4] == 1:
-        conditions += "co.coauthors = " + S[4]
+        conditions += "coauthors = " + S[4]
 
 
-    request = "SELECT COUNT(p.id)" \
-              "FROM authors" + suffix + " a, " \
-                    "venue" + suffix + " v, " \
-                    "papers" + suffix + " p, " \
-                    "paperauths" + suffix + " pa, " \
-                    "coau_papers" + suffix + " co" \
-              "WHERE a.id = pa.authid and p.id = pa.paperid and v.id = p.venue and p.id = co.id " + conditions + ";"
+    request = "SELECT COUNT(*) " \
+              "FROM dataset" + str(R) + " " \
+              "" + conditions + ";"
 
     return request
 
