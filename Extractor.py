@@ -85,7 +85,7 @@ def create_sql(S, R):
 
 
     request = "SELECT COUNT(*) " \
-              "FROM dataset" + str(R) + " " \
+              "FROM small_dataset" + str(R) + " " \
               "" + conditions + ";"
 
     return request
@@ -134,7 +134,7 @@ def count_paper(S, R):
                                   password="123456",
                                   host="localhost",
                                   port="5432",
-                                  database="cs645")
+                                  database="postgres")
 
     cursor = connection.cursor()
 

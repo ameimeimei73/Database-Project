@@ -1,16 +1,17 @@
 import pandas as pd
+from copy import deepcopy
 import numpy as np
 import heapq
 from ScoreFunction import insight_score
 from Extractor import extract
 
-authorid = pd.read_csv('authorid.csv', index_col = False, header = None)
+authorid = pd.read_csv('small_authorid.csv', index_col = False, header = None)
 authorid = list(np.array(authorid).reshape(-1))
 
-venueyear = pd.read_csv('venueyear.csv', index_col = False, header = None)
+venueyear = pd.read_csv('small_venueyear.csv', index_col = False, header = None)
 venueyear = list(np.array(venueyear).reshape(-1))
 
-coauthors = pd.read_csv('coauthors.csv', index_col = False, header = None)
+coauthors = pd.read_csv('small_coauthors.csv', index_col = False, header = None)
 coauthors = list(np.array(coauthors).reshape(-1))
 
 dimesions = [authorid, venueyear, coauthors]
@@ -22,17 +23,27 @@ def EnumerateInsight(s, di, ce, H, R, k, tau):
         for t in type:
             if (t == 2 and s[1] == '*'):
                 continue
-            score = insight_score(phi, t, 1662)
+            score = float(insight_score(phi, t, 5000))
             if len(H) < k:
-                heapq.heappush(H, (score, [s, di, ce, t]))
+                H.append((score, [s, di, ce, t]))
+                # heapq.heappush(H, (score, [s, di, ce, t]))
             elif len(H) == k:
-                uk = H[0]
-                ubk = uk[0]
-                if score > ubk:
-                    heapq.heappush(H, (score, [s, di, ce, t]))
-                    heapq.heappop(H)
+                uk = 10
+                ind = -1
+                for i in range(len(H)):
+                    if H[i][0] < uk:
+                        uk = H[i][0]
+                        ind = i
+                if score > uk:
+                    del H[ind]
+                    H.append((score, [s, di, ce, t]))
+                #uk = H[0]
+                #ubk = uk[0]
+                #if score > ubk:
+                    #heapq.heappush(H, (score, [s, di, ce, t]))
+                    #heapq.heappop(H)
     for d in dimesions[di]:
-        si = s
+        si = deepcopy(s)
         si[di] = d
         for j in range(0, len(s)):
             if si[j] == '*':

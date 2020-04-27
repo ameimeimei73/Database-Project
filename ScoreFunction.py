@@ -35,8 +35,12 @@ def sig_point(result_set):
 
     last_column = np.array(list(result_set.values()))[:, -1]
     lc_sort = np.sort(last_column)[::-1]
-    Y = lc_sort[1:]
-    X = np.arange(3, len(Y) + 3)
+    # Y = lc_sort[1:]
+    Y = np.trim_zeros(lc_sort[1:])
+    if(len(Y) <= 1):
+        return 0
+    # Y = np.ma.masked_equal(lc_sort[1:], 0)
+    X = np.arange(2, len(Y) + 2)
     Y_max = lc_sort[0]
 
     powerlaw = lambda i, a, b: a * (i ** b)
@@ -56,20 +60,20 @@ def sig_point(result_set):
 
     pfinal = out[0]
     covar = out[1]
-    print(pfinal)
-    print(covar)
+    # print(pfinal)
+    # print(covar)
 
     index = pfinal[1]
     amp = 10.0**pfinal[0]
 
-    pred = powerlaw(2, amp, index)
+    pred = powerlaw(1, amp, index)
 
     err_array = Y - powerlaw(X, amp, index)
-    print("predicted value: ", pred)
+    # print("predicted value: ", pred)
     # random_sample = norm.rvs(loc=0,scale=1,size=200)
     parameters = norm.fit(err_array)
     p = 1 - norm(parameters[0], parameters[1]).cdf(pred - Y_max)
-    print('p value:', p)
+    # print('p value:', p)
 
 
 
@@ -123,7 +127,10 @@ def sig_point(result_set):
     #
     # y_pred = model.predict(x)
     # print('predicted response:', y_pred)
-    return 1 - p
+    if(p == None):
+        return 0
+    # print('type: ', type(1 - p))
+    return float(1 - p)
 # Significance of shape insight
 def sig_shape(result_set):
 
@@ -135,15 +142,16 @@ def sig_shape(result_set):
 
     model = LinearRegression()
     model.fit(year, last_column)
-    r2 = model.score(year, last_column)
+    r2 = model.score(np.array(list(map(float,year))).reshape((-1, 1)), list(map(float,last_column)))
     slope = model.coef_
-    print('coefficient of determination:', r2)
-    print('intercept:', model.intercept_)
-    print('slope:', model.coef_)
+    # print('coefficient of determination:', r2)
+    # print('intercept:', model.intercept_)
+    # print('slope:', model.coef_)
 
     # y_pred = model.predict(x)
     # print('predicted response:', y_pred)
 
     p = (logistic(0.2, 2).cdf(-slope)) + 1 - (logistic(0.2, 2).cdf(slope))
-    print('p value:', p)
-    return r2*(1 - p)
+    # print('p value:', p)
+    # print('return val: ', type(r2*(1 - p)))
+    return float(r2*(1 - p))
