@@ -5,16 +5,16 @@ import heapq
 from ScoreFunction import insight_score
 from Extractor import extract
 
-authorid = pd.read_csv('small_authorid.csv', index_col = False, header = None)
+authorid = pd.read_csv('authorid_1.csv', index_col = False, header = None)
 authorid = list(np.array(authorid).reshape(-1))
 
-venueyear = pd.read_csv('small_venueyear.csv', index_col = False, header = None)
+venueyear = pd.read_csv('venueyear_1.csv', index_col = False, header = None)
 venueyear = list(np.array(venueyear).reshape(-1))
 
-coauthors = pd.read_csv('small_coauthors.csv', index_col = False, header = None)
-coauthors = list(np.array(coauthors).reshape(-1))
+# coauthors = pd.read_csv('small_coauthors.csv', index_col = False, header = None)
+# coauthors = list(np.array(coauthors).reshape(-1))
 
-dimesions = [authorid, venueyear, coauthors]
+dimesions = [authorid, venueyear]
 type = [1, 2]
 
 def EnumerateInsight(s, di, ce, H, R, k, tau):
@@ -24,24 +24,25 @@ def EnumerateInsight(s, di, ce, H, R, k, tau):
             if (t == 2 and s[1] == '*'):
                 continue
             score = float(insight_score(phi, t, 5000))
-            if len(H) < k:
-                H.append((score, [s, di, ce, t]))
-                # heapq.heappush(H, (score, [s, di, ce, t]))
-            elif len(H) == k:
-                uk = 10
-                ind = -1
-                for i in range(len(H)):
-                    if H[i][0] < uk:
-                        uk = H[i][0]
-                        ind = i
-                if score > uk:
-                    del H[ind]
+            if (score != np.nan):
+                if len(H) < k:
                     H.append((score, [s, di, ce, t]))
-                #uk = H[0]
-                #ubk = uk[0]
-                #if score > ubk:
-                    #heapq.heappush(H, (score, [s, di, ce, t]))
-                    #heapq.heappop(H)
+                    # heapq.heappush(H, (score, [s, di, ce, t]))
+                elif len(H) == k:
+                    uk = 10
+                    ind = -1
+                    for i in range(len(H)):
+                        if H[i][0] < uk:
+                            uk = H[i][0]
+                            ind = i
+                    if score > uk:
+                        del H[ind]
+                        H.append((score, [s, di, ce, t]))
+                    #uk = H[0]
+                    #ubk = uk[0]
+                    #if score > ubk:
+                        #heapq.heappush(H, (score, [s, di, ce, t]))
+                        #heapq.heappop(H)
     for d in dimesions[di]:
         si = deepcopy(s)
         si[di] = d

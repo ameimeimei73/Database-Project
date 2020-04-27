@@ -3,7 +3,7 @@ from insight_helper import EnumerateInsight
 
 aggs = ["SUM", "COUNT", "AVG", "MAX", "MIN"]
 # normal_dims = ["aid", "year", "coauthor"]
-normal_dims = [0, 1, 2]
+normal_dims = [0, 1]
 q4_dims = []
 ce_index = [0, 1, 2, 3]
 ###############   rank    %    davg  dprev
@@ -72,6 +72,6 @@ def insights(R, tau, k):
     d = len(dims)
     for ce in O:
         for i in range(d):
-            S = ['*', '*', '*']
+            S = ['*', '*']
             EnumerateInsight(S, i, ce, H, R, k, tau)
     return H

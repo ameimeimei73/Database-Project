@@ -62,10 +62,10 @@ def extractors(index, res_set, S):
 def create_sql(S, R):
 
     conditions = ""
-    cond_arr = [None] * 3
+    cond_arr = [None] * 2
     cond_arr[0] = 0 if S[0] == '*' else 1
     cond_arr[1] = 0 if S[1] == '*' else 1
-    cond_arr[2] = 0 if S[2] == '*' else 1
+    # cond_arr[2] = 0 if S[2] == '*' else 1
 
     if sum(cond_arr) > 0:
         conditions += "WHERE "
@@ -75,17 +75,17 @@ def create_sql(S, R):
         if sum(cond_arr[1:]) > 0:
             conditions += " and "
 
+    # if cond_arr[1] == 1:
+    #     conditions += "year = " + str(S[1])
+    #     if sum(cond_arr[2:]) > 0:
+    #         conditions += " and "
+
     if cond_arr[1] == 1:
         conditions += "year = " + str(S[1])
-        if sum(cond_arr[2:]) > 0:
-            conditions += " and "
-
-    if cond_arr[2] == 1:
-        conditions += "coauthors = " + str(S[2])
 
 
     request = "SELECT COUNT(*) " \
-              "FROM small_dataset" + str(R) + " " \
+              "FROM dataset" + str(R) + " " \
               "" + conditions + ";"
 
     return request
