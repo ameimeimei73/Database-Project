@@ -1,7 +1,6 @@
 import numpy as np
 from string import punctuation
 import pandas as pd
-import numpy as np
 from collections import Counter
 from nltk.corpus import stopwords
 
@@ -28,7 +27,7 @@ for w in all_words:
     if w not in en_stops:
         words.append(w)
 
-# Count the number of words, generate the feature vector
+# Count the number of words, sort in descending order
 count = Counter(words)
 vocab = sorted(count,key=count.get,reverse=True)
 vocab = vocab[:50]
