@@ -61,10 +61,10 @@ def insights(R, tau, k):
     H = []  # element (score, {"SG": SG, "Ce": ce, "type": T})
 
     dims = []
-    if R == 1 or R == 2 or R == 3:
+    if R == 1 or R == 2 or R == 3 or R == 4 or R == 5:
         dims = normal_dims
-    elif R == 4:
-        dims = q4_dims
+    # elif R == 4:
+    #     dims = q4_dims
     else:
         print("Illegal dataset index")
 

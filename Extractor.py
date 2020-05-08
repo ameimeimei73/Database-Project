@@ -46,7 +46,7 @@ def extractors(index, res_set, S):
     # delta_prev
     elif index == 3:
 
-        temp = sorted(data.items(), key=lambda x: x[1][1])  # sort by year
+        temp = sorted(data.items(), key=lambda x: x[0][1])  # sort by year
 
 
         for i in range(len(temp)):
@@ -71,7 +71,10 @@ def create_sql(S, R):
         conditions += "WHERE "
 
     if cond_arr[0] == 1:
-        conditions += "aid = " + str(S[0])
+        if R == 4 or R == 5:
+            conditions += "to_tsvector('english', name) @@ to_tsquery('english', '" + str(S[0]) +"')"
+        else:
+            conditions += "aid = " + str(S[0])
         if sum(cond_arr[1:]) > 0:
             conditions += " and "
 
@@ -112,7 +115,7 @@ def recur_extract(S, level, ce, doms, R):
             Sv[D] = v
             Mv_prime = recur_extract(Sv, level-1, ce, doms, R)
             res_set[tuple(Sv)] = Mv_prime
-
+        print(res_set)
         M_prime = res_set[tuple(S)]
 
         # only when D == 3 (year), delta_prev (index == 3) is applicable
@@ -134,7 +137,7 @@ def count_paper(S, R):
                                   password="123456",
                                   host="localhost",
                                   port="5432",
-                                  database="postgres")
+                                  database="cs645")
 
     cursor = connection.cursor()
 

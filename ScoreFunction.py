@@ -4,6 +4,8 @@ from scipy import optimize
 from sklearn.linear_model import LinearRegression
 from scipy.stats import norm
 from scipy.stats import logistic
+import collections
+from sklearn.metrics import r2_score
 
 
 
@@ -134,15 +136,18 @@ def sig_point(result_set):
 # Significance of shape insight
 def sig_shape(result_set):
 
-    year = np.array(list(result_set.keys()))[:, 1].reshape((-1, 1))
-    last_column = np.array(list(result_set.values()))[:, -1]
+    sorted_set = collections.OrderedDict(sorted(result_set.items(), key=lambda x: x[0][1]))
+    year = np.array(list(sorted_set.keys()))[:, 1].reshape((-1, 1))
+    last_column = np.array(list(sorted_set.values()))[:, -1]
 
     # x = np.array([5, 15, 25, 35, 45, 55]).reshape((-1, 1))
     # y = np.array([5, 20, 14, 32, 22, 38])
 
     model = LinearRegression()
     model.fit(year, last_column)
-    r2 = model.score(np.array(list(map(float,year))).reshape((-1, 1)), list(map(float,last_column)))
+    pred = model.predict(np.array(list(map(float,year))).reshape((-1, 1)))
+    #r2 = model.score(np.array(list(map(float,last_column))).reshape((-1, 1)), np.array(list(map(float,last_column))).reshape((-1, 1)))
+    r2 = r2_score(last_column, pred)
     slope = model.coef_
     # print('coefficient of determination:', r2)
     # print('intercept:', model.intercept_)
@@ -150,8 +155,11 @@ def sig_shape(result_set):
 
     # y_pred = model.predict(x)
     # print('predicted response:', y_pred)
-
-    p = (logistic(0.2, 2).cdf(-slope)) + 1 - (logistic(0.2, 2).cdf(slope))
+    p = 0
+    if(slope > 0):
+        p = (logistic(0.2, 2).cdf(-slope)) + 1 - (logistic(0.2, 2).cdf(slope))
+    else:
+        p = (logistic(0.2, 2).cdf(slope)) + 1 - (logistic(0.2, 2).cdf(-slope))
     # print('p value:', p)
     # print('return val: ', type(r2*(1 - p)))
     return float(r2*(1 - p))

@@ -5,25 +5,58 @@ import heapq
 from ScoreFunction import insight_score
 from Extractor import extract
 
-authorid = pd.read_csv('authorid_1.csv', index_col = False, header = None)
-authorid = list(np.array(authorid).reshape(-1))
-
+# Import the domain of every dimension
+# Question 1
+venueid = pd.read_csv('venueid_1.csv', index_col = False, header = None)
+venueid = list(np.array(venueid).reshape(-1))
 venueyear = pd.read_csv('venueyear_1.csv', index_col = False, header = None)
 venueyear = list(np.array(venueyear).reshape(-1))
+dimesions = [venueid, venueyear]
+total_tuples = 819
 
-# coauthors = pd.read_csv('small_coauthors.csv', index_col = False, header = None)
-# coauthors = list(np.array(coauthors).reshape(-1))
+# Question 2
+# authorid = pd.read_csv('authorid_2.csv', index_col = False, header = None)
+# authorid  = list(np.array(authorid ).reshape(-1))
+# venueyear = pd.read_csv('venueyear_2.csv', index_col = False, header = None)
+# venueyear = list(np.array(venueyear).reshape(-1))
+# dimesions = [authorid, venueyear]
+# total_tuples = 4458
 
-dimesions = [authorid, venueyear]
-type = [1, 2]
+# Question 3
+# authorid = pd.read_csv('authorid_3.csv', index_col = False, header = None)
+# authorid  = list(np.array(authorid ).reshape(-1))
+# venueyear = pd.read_csv('venueyear_3.csv', index_col = False, header = None)
+# venueyear = list(np.array(venueyear).reshape(-1))
+# dimesions = [authorid, venueyear]
+# total_tuples = 482
+
+# Question 4
+# papername = ['systems', 'networks', 'data', 'algorithm', 'distributed', 'neural', 'learning', 'wireless', 'mobile', 'web']
+# venueyear = pd.read_csv('venueyear_4.csv', index_col = False, header = None)
+# venueyear = list(np.array(venueyear).reshape(-1))
+# dimesions = [papername, venueyear]
+# total_tuples = 683752
+
+# Question 5
+# papername = ['systems', 'networks', 'data', 'algorithm', 'distributed', 'neural', 'learning', 'wireless', 'mobile', 'web']
+# venueyear = pd.read_csv('venueyear_5.csv', index_col = False, header = None)
+# venueyear = list(np.array(venueyear).reshape(-1))
+# dimesions = [papername, venueyear]
+# total_tuples = 683752
 
 def EnumerateInsight(s, di, ce, H, R, k, tau):
     if isValid(s, di, ce, R):
         phi = extract(s, di, dimesions, ce, tau, R)
+        if R == 4:
+            type = [1]
+        elif R == 5:
+            type = [2]
+        else:
+            type = [1, 2]
         for t in type:
-            if (t == 2 and s[1] == '*'):
+            if (t == 2 and di != 1):
                 continue
-            score = float(insight_score(phi, t, 5000))
+            score = float(insight_score(phi, t, total_tuples))
             if (score != np.nan):
                 if len(H) < k:
                     H.append((score, [s, di, ce, t]))
@@ -52,14 +85,15 @@ def EnumerateInsight(s, di, ce, H, R, k, tau):
 
 def isValid(s, di, ce, R):
     n = len(ce)
-
-    if R == 1 or R == 2:
+    if R == 1 or R == 2 or R == 4 or R == 5:
         for i in range(1, n):
             if ce[i][1] != di and s[ce[i][1]] == '*':
                 return False
     elif R == 3:
         for i in range(1, n):
-            if ce[i][1] != di and s[ce[i][1]] == '*' and di != 0 and ce[n-1][1] != 0: # s[0] == '*': !(ce[n-1][1] == 0 or di == 0)
+            if ce[i][1] != di and s[ce[i][1]] == '*':
+                return False
+            if di != 0 and s[0] == '*':
                 return False
     return True
 
