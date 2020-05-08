@@ -73,6 +73,8 @@ def create_sql(S, R):
     if cond_arr[0] == 1:
         if R == 4 or R == 5:
             conditions += "to_tsvector('english', name) @@ to_tsquery('english', '" + str(S[0]) +"')"
+        elif R == 1:
+            conditions += "vid = " + str(S[0])
         else:
             conditions += "aid = " + str(S[0])
         if sum(cond_arr[1:]) > 0:

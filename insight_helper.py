@@ -12,6 +12,7 @@ venueid = list(np.array(venueid).reshape(-1))
 venueyear = pd.read_csv('venueyear_1.csv', index_col = False, header = None)
 venueyear = list(np.array(venueyear).reshape(-1))
 dimesions = [venueid, venueyear]
+#please use sql query "select count(*) from dataset1;" to get the total_tuples
 total_tuples = 819
 
 # Question 2
@@ -20,6 +21,7 @@ total_tuples = 819
 # venueyear = pd.read_csv('venueyear_2.csv', index_col = False, header = None)
 # venueyear = list(np.array(venueyear).reshape(-1))
 # dimesions = [authorid, venueyear]
+#please use sql query "select count(*) from dataset2;" to get the total_tuples
 # total_tuples = 4458
 
 # Question 3
@@ -28,6 +30,7 @@ total_tuples = 819
 # venueyear = pd.read_csv('venueyear_3.csv', index_col = False, header = None)
 # venueyear = list(np.array(venueyear).reshape(-1))
 # dimesions = [authorid, venueyear]
+#please use sql query "select count(*) from dataset3;" to get the total_tuples
 # total_tuples = 482
 
 # Question 4
@@ -35,6 +38,7 @@ total_tuples = 819
 # venueyear = pd.read_csv('venueyear_4.csv', index_col = False, header = None)
 # venueyear = list(np.array(venueyear).reshape(-1))
 # dimesions = [papername, venueyear]
+#please use sql query "select count(*) from dataset4;" to get the total_tuples
 # total_tuples = 683752
 
 # Question 5
@@ -42,6 +46,7 @@ total_tuples = 819
 # venueyear = pd.read_csv('venueyear_5.csv', index_col = False, header = None)
 # venueyear = list(np.array(venueyear).reshape(-1))
 # dimesions = [papername, venueyear]
+#please use sql query "select count(*) from dataset5;" to get the total_tuples
 # total_tuples = 683752
 
 def EnumerateInsight(s, di, ce, H, R, k, tau):
