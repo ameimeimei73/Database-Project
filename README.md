@@ -4,7 +4,7 @@ Extracting Top-K Insights from Multi-dimensional Data
 
 ##To setup
 
-We deploy our project on google cloud to improve our computation ability. please follow the following two toturials to set up google cloud and set up PostgreSQL on google cloud vm instance.
+We deploy our project on google cloud to improve our computation ability. please follow the following two toturials to set up google cloud and set up PostgreSQL on google cloud vm instance and transfer relative files from local to your instance.
 
 https://compsci682-fa18.github.io/gce-tutorial/
 
