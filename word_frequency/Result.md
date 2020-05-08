@@ -1,0 +1,3 @@
+# Result
+
+['using', 'systems', 'based', 'networks', 'system', 'analysis', 'data', 'model', 'approach', 'design', 'algorithm', 'control', 'network', 'information', 'learning', 'method', 'performance', 'detection', 'wireless', 'image', 'new', 'study', 'mobile', 'distributed', 'management', 'dynamic', 'software', 'applications', 'efficient', 'models', 'modeling', 'application', 'adaptive', 'optimization', 'algorithms', 'estimation', 'web', 'evaluation', 'recognition', 'framework', 'fuzzy', 'problem', 'neural', 'sensor', 'parallel', 'classification', 'simulation', 'power', 'time', 'development']
