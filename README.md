@@ -6,7 +6,7 @@ Extracting Top-K Insights from Multi-dimensional Data
 
 We deploy our project on google cloud to improve our computation ability. please follow the following two toturials to set up google cloud and set up PostgreSQL on google cloud vm instance.
 
-https://compsci682-fa18.github.io/gce-tutorial/
+https://compsci682-fa18.github.io/gce-tutorial/ \\
 https://cloud.google.com/community/tutorials/setting-up-postgres
 
 You need to install Postgresql, then run the `setup.sql` to create the datasets for different questions.
