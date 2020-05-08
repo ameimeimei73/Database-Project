@@ -16,6 +16,11 @@ First you should open the `insight_helper` file,  at the top you will see severa
 
 Moreover, you need to change the value of `total_tuples`, it should be the size of corresponding dataset (dataset1, dataset2,...,dataset5). For example, the size of dataset1 for the question1, we already generated dataset1-5 for our five questions in the previous step. Since we generate datasets by randomly choose some data, so the dataset size will be different when you everytime setup the dataset, we can't set `total_tuples` in advance for you.
 
+Finally, in `Extractor.py`pass correct parameters to the connect function to connect postgresql database. Here is an example what is our parameters looks like. All of the parameters are set when you create your postgres database.
+
+connection = psycopg2.connect(user="postgres", password="123456", host="localhost", port="5432", database="cs645")
+
+
 Then you can run the following command: 
 
 ```
